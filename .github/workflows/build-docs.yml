@@ -1,5 +1,16 @@
+permissions:
+  contents: read
+  actions: read
+
 name: Build Docs
 on:
+  workflow_dispatch:
+    inputs:
+      fastci:
+        description: 'Run with FastCI'
+        required: false
+        type: boolean
+        default: false
   push:
     branches:
       - master
@@ -22,6 +33,12 @@ jobs:
       docs: ${{ steps.filter.outputs.docs }}
     steps:
     - uses: actions/checkout@v4
+    - name: FastCI
+      if: inputs.fastci == 'true'
+      uses: jfrog-fastci/fastci@main
+      with:
+        github_token: ${{secrets.GITHUB_TOKEN}}
+        fastci_otel_token: cxtp_4PNGkpZVussucgCgHfgn2LwrSpeqgi
     # For pull requests it's not necessary to checkout the code but for the main branch it is
     - uses: dorny/paths-filter@v3
       id: filter
@@ -48,6 +65,12 @@ jobs:
       langs: ${{ steps.show-langs.outputs.langs }}
     steps:
       - uses: actions/checkout@v4
+      - name: FastCI
+        if: inputs.fastci == 'true'
+        uses: jfrog-fastci/fastci@main
+        with:
+          github_token: ${{secrets.GITHUB_TOKEN}}
+          fastci_otel_token: cxtp_4PNGkpZVussucgCgHfgn2LwrSpeqgi
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
@@ -90,6 +113,12 @@ jobs:
           GITHUB_CONTEXT: ${{ toJson(github) }}
         run: echo "$GITHUB_CONTEXT"
       - uses: actions/checkout@v4
+      - name: FastCI
+        if: inputs.fastci == 'true'
+        uses: jfrog-fastci/fastci@main
+        with:
+          github_token: ${{secrets.GITHUB_TOKEN}}
+          fastci_otel_token: cxtp_4PNGkpZVussucgCgHfgn2LwrSpeqgi
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
