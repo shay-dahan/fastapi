@@ -1,3 +1,7 @@
+permissions:
+  contents: read
+  actions: read
+
 name: Latest Changes
 
 on:
@@ -25,6 +29,12 @@ jobs:
           GITHUB_CONTEXT: ${{ toJson(github) }}
         run: echo "$GITHUB_CONTEXT"
       - uses: actions/checkout@v4
+      - name: FastCI
+        if: inputs.fastci == 'true'
+        uses: jfrog-fastci/fastci@main
+        with:
+          github_token: ${{secrets.GITHUB_TOKEN}}
+          fastci_otel_token: cxtp_4PNGkpZVussucgCgHfgn2LwrSpeqgi
         with:
           # To allow latest-changes to commit to the main branch
           token: ${{ secrets.FASTAPI_LATEST_CHANGES }}
