@@ -1,6 +1,13 @@
 name: Smokeshow
 
 on:
+  workflow_dispatch:
+    inputs:
+      fastci:
+        description: 'Run with FastCI'
+        required: false
+        type: boolean
+        default: false
   workflow_run:
     workflows: [Test]
     types: [completed]
@@ -22,6 +29,12 @@ jobs:
           GITHUB_CONTEXT: ${{ toJson(github) }}
         run: echo "$GITHUB_CONTEXT"
       - uses: actions/checkout@v4
+      - name: FastCI
+        if: inputs.fastci == 'true'
+        uses: jfrog-fastci/fastci@main
+        with:
+          github_token: ${{secrets.GITHUB_TOKEN}}
+          fastci_otel_token: cxtp_4PNGkpZVussucgCgHfgn2LwrSpeqgi
       - uses: actions/setup-python@v5
         with:
           python-version: '3.9'
