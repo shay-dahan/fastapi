@@ -1,6 +1,17 @@
+permissions:
+  contents: read
+  actions: read
+
 name: Add to Project
 
 on:
+  workflow_dispatch:
+    inputs:
+      fastci:
+        description: 'Run with FastCI'
+        required: false
+        type: boolean
+        default: false
   pull_request_target:
   issues:
     types:
